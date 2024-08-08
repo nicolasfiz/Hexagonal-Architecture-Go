@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,9 +21,10 @@ func main() {
 	//Albums
 	albumGroup := r.Group("/album")
 
-	albumHandler := album.AlbumHandler{Db: &db.Db}
+	albumHandler := album.NewAlbumHandler(db.GetDatabase())
 
 	albumGroup.GET("/", albumHandler.GetAlbums)
 
+	fmt.Println("🚀 Server running at http://localhost:8080 🚀")
 	r.Run(":8080")
 }

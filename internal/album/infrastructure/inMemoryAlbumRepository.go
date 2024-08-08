@@ -3,14 +3,18 @@ package infrastructure
 import (
 	"errors"
 
-	albumDomain "github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/domain"
+	"github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/domain"
 )
 
 type InMemoryAlbumRepository struct {
-	db *[]albumDomain.Album
+	db *[]domain.Album
 }
 
-func (r *InMemoryAlbumRepository) GetAlbums() (*[]albumDomain.Album, error) {
+func NewInMemoryAlbumRepository(db *[]domain.Album) domain.AlbumRepository {
+	return &InMemoryAlbumRepository{db: db}
+}
+
+func (r *InMemoryAlbumRepository) GetAlbums() (*[]domain.Album, error) {
 	if len(*r.db) == 0 {
 		return nil, errors.New("there are no albums in database")
 	}

@@ -1,13 +1,17 @@
 package application
 
 import (
-	AlbumDomain "github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/domain"
+	"github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/domain"
 )
 
 type AlbumFinder struct {
-	Repository AlbumDomain.AlbumRepository
+	repository domain.AlbumRepository
 }
 
-func (f *AlbumFinder) Run() (*[]AlbumDomain.Album, error) {
-	return f.Repository.GetAlbums()
+func NewAlbumFinder(repo domain.AlbumRepository) *AlbumFinder {
+	return &AlbumFinder{repository: repo}
+}
+
+func (f *AlbumFinder) Run() (*[]domain.Album, error) {
+	return f.repository.GetAlbums()
 }
