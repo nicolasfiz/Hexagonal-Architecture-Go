@@ -6,19 +6,21 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/application"
 	"github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/domain"
+	"github.com/nicolasfiz/Hexagonal-Architecture-Go/pkg/db"
 )
 
 type AlbumHandler struct {
-	db *[]domain.Album
+	db         *db.Database
+	repository domain.AlbumRepository
 }
 
-func NewAlbumHandler(db *[]domain.Album) *AlbumHandler {
-	return &AlbumHandler{db}
+func NewAlbumHandler(db *db.Database) *AlbumHandler {
+	repository := NewInMemoryAlbumRepository(db)
+	return &AlbumHandler{db, repository}
 }
 
 func (h *AlbumHandler) GetAlbums(c *gin.Context) {
-	repo := NewInMemoryAlbumRepository(h.db)
-	finder := application.NewAlbumFinder(repo)
+	finder := application.NewAlbumFinder(h.repository)
 	albums, err := finder.Run()
 
 	if err != nil {

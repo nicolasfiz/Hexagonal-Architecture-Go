@@ -2,28 +2,18 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
-	album "github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/infrastructure"
-	db "github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/db"
+	"github.com/nicolasfiz/Hexagonal-Architecture-Go/pkg/db"
+	"github.com/nicolasfiz/Hexagonal-Architecture-Go/routes"
 )
 
 func main() {
 	r := gin.Default()
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	db := db.GetDatabase()
 
-	//Albums
-	albumGroup := r.Group("/album")
-
-	albumHandler := album.NewAlbumHandler(db.GetDatabase())
-
-	albumGroup.GET("/", albumHandler.GetAlbums)
+	routes.InitRoutes(r, db)
 
 	fmt.Println("🚀 Server running at http://localhost:8080 🚀")
 	r.Run(":8080")
