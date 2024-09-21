@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/nicolasfiz/Hexagonal-Architecture-Go/internal/album/domain"
 	"github.com/nicolasfiz/Hexagonal-Architecture-Go/pkg/db"
@@ -21,4 +22,14 @@ func (r *InMemoryAlbumRepository) GetAlbums() (*[]domain.Album, error) {
 	}
 
 	return r.db.AlbumData, nil
+}
+
+func (r *InMemoryAlbumRepository) CreateAlbum(album *domain.Album) (*domain.Album, error) {
+	if album == nil {
+		return nil, fmt.Errorf("you cannot create an empty album")
+	}
+
+	*r.db.AlbumData = append(*r.db.AlbumData, *album)
+
+	return album, nil
 }

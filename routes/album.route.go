@@ -12,4 +12,5 @@ func InitAlbumRoutes(r *gin.Engine, db *db.Database) {
 	albumHandler := infrastructure.NewAlbumHandler(db)
 
 	albumGroup.GET("/", albumHandler.GetAlbums)
+	albumGroup.POST("/", albumHandler.CreateAlbum)
 }

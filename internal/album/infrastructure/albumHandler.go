@@ -29,3 +29,21 @@ func (h *AlbumHandler) GetAlbums(c *gin.Context) {
 
 	c.JSON(http.StatusOK, *albums)
 }
+
+func (h *AlbumHandler) CreateAlbum(c *gin.Context) {
+	var album domain.Album
+
+	if err := c.BindJSON(&album); err != nil {
+		c.JSON(http.StatusBadRequest, err)
+
+	}
+
+	creator := application.NewAlbumCreator(h.repository)
+	result, creatorError := creator.Run(&album)
+
+	if creatorError != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": creatorError.Error()})
+	}
+
+	c.JSON(http.StatusCreated, result)
+}
